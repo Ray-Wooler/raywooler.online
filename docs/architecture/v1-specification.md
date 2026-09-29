@@ -1,7 +1,8 @@
 # raywooler.online V1
 ## Professional Portfolio & AI-Powered Services Platform
 
-**Document status:** Proposed V1 Baseline\
+**Document status:** Accepted V1 Baseline\
+**Owner acceptance:** Raymond Wooler, 29 September 2026\
 **Owner:** Raymond Wooler\
 **Chief of Staff / Architecture Authority:** Frank\
 **Development Executor:** OpenAI Codex\
