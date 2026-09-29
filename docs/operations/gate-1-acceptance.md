@@ -10,7 +10,8 @@
 - Working branch: `feat/gate-1-repository-foundation`
 - Direct SSH fetch remained blocked by this workspace's DNS/network path. After the GitHub App was approved for the `Ray-Wooler` organization, the source was committed to the authoritative repository through its Git API.
 - Architecture baseline commit on `main`: `3029e6590804a557694c3f5909ea1a5922e74dc2`.
-- Feature branch head: `143ce4ac8598ca0f708cf60cb3fc392d53ead05d` (foundation commit plus a follow-up retaining the baseline file).
+- Foundation implementation commit: `143ce4ac8598ca0f708cf60cb3fc392d53ead05d` (includes the baseline file; no deletions from `main`).
+- Latest branch head: `afbece38351485adf4ffb0937d5dcfcb1737630a`, adding this remote verification report. CI is running for this documentation-only update.
 - Draft review: [PR #1](https://github.com/Ray-Wooler/raywooler.online/pull/1); 40 files changed, no deletions.
 
 ## Foundation delivered
@@ -42,7 +43,8 @@
 
 ## Remote verification and remaining acceptance conditions
 
-- GitHub Actions CI run `36614731276` completed successfully on feature head `143ce4ac8598ca0f708cf60cb3fc392d53ead05d`: format, lint, typecheck, unit tests, PostgreSQL integration, production build and Chromium E2E all passed.
+- GitHub Actions CI run `36614731276` completed successfully on implementation commit `143ce4ac8598ca0f708cf60cb3fc392d53ead05d`: format, lint, typecheck, unit tests, PostgreSQL integration, production build and Chromium E2E all passed.
+- A docs-only evidence commit triggered a fresh CI run for the current PR head; its result is pending.
 - PR #1 remains a draft and has not been merged.
 - Repository ruleset listing returned no rulesets. The branch-protection endpoint returned 403 to the connected integration, so `main` protection could not be independently verified. No protection setting was changed and no merge was attempted.
 - Gate 1 remains partial until Ray reviews/accepts the evidence and `main` protection is verified. Do not begin Gate 2 before that acceptance.
