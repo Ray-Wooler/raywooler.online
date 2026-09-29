@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "feat/**", "fix/**", "security/**", "chore/**"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: raywooler
+          POSTGRES_USER: raywooler
+          POSTGRES_PASSWORD: local-ci-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U raywooler -d raywooler"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.25.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm format:check
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm test:integration
+        env:
+          TEST_DATABASE_URL: postgresql://raywooler:local-ci-only@localhost:5432/raywooler
+      - run: pnpm build
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:e2e
