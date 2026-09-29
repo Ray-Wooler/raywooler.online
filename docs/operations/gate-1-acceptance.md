@@ -1,6 +1,6 @@
 # Gate 1 — Repository Foundation Evidence
 
-**Status:** Pending remote CI and owner review\
+**Status:** PARTIAL — CI passed at `143ce4ac8598ca0f708cf60cb3fc392d53ead05d`; awaiting branch-protection verification and owner review.\
 **Scope:** Gate 1 only; no Gate 2 portfolio features are included.
 
 ## Repository
@@ -8,7 +8,10 @@
 - Canonical remote: `git@github.com:Ray-Wooler/raywooler.online.git`
 - Repository was confirmed empty before work: default branch name `main`, no commits, files or branches.
 - Working branch: `feat/gate-1-repository-foundation`
-- Direct `git fetch` could not resolve `github.com` in this execution environment. The connected GitHub repository view was used to inspect remote state and will be used for the authorized repository commit if SSH remains unavailable.
+- Direct SSH fetch remained blocked by this workspace's DNS/network path. After the GitHub App was approved for the `Ray-Wooler` organization, the source was committed to the authoritative repository through its Git API.
+- Architecture baseline commit on `main`: `3029e6590804a557694c3f5909ea1a5922e74dc2`.
+- Feature branch head: `143ce4ac8598ca0f708cf60cb3fc392d53ead05d` (foundation commit plus a follow-up retaining the baseline file).
+- Draft review: [PR #1](https://github.com/Ray-Wooler/raywooler.online/pull/1); 40 files changed, no deletions.
 
 ## Foundation delivered
 
@@ -28,17 +31,18 @@
 | Lint | PASS | `pnpm lint` |
 | Typecheck | PASS | `pnpm typecheck` |
 | Unit tests | PASS | 3 passed |
-| Integration test | NOT RUN locally | 1 PostgreSQL connection test skipped because Docker/PostgreSQL are unavailable; CI config supplies PostgreSQL 16. |
+| Integration test | PASS in CI | PostgreSQL connection test passed against the GitHub Actions PostgreSQL 16 service; skipped locally because Docker/PostgreSQL are unavailable. |
 | Production build | PASS | `pnpm build` on Node 24.19.0; project targets Node 22 LTS. |
 | HTTP smoke | PASS | Production server returned the expected foundation title and scope text on loopback. |
-| E2E browser test | NOT RUN locally | Playwright is configured; no browser binary is installed in this workspace. CI installs Chromium. |
+| E2E browser test | PASS in CI | Chromium installed and the Playwright smoke test passed; no browser binary was available locally. |
 | Migration generation | PASS | Drizzle reports 0 tables and no migration, as intended at Gate 1. |
 | Dependency audit | PASS | `pnpm audit` reports no known vulnerabilities after the scoped esbuild override. |
 | Configuration parse | PASS | Docker Compose, GitHub Actions YAML and Biome configuration parse. |
 | Secret-pattern scan | PASS | No common API/private-key credential patterns found; staged diff review remains part of this commit. |
 
-## Remaining acceptance conditions
+## Remote verification and remaining acceptance conditions
 
-- Commit the verified source to the feature branch in the authoritative GitHub repository and confirm its CI status.
-- Verify or configure the requested `main` branch protection. The currently available GitHub connector can inspect protection/rulesets but exposes no mutation action; no merge will be attempted.
-- Gate 1 is not declared passed until remote CI succeeds and Ray reviews/accepts this evidence. Do not begin Gate 2 before that acceptance.
+- GitHub Actions CI run `36614731276` completed successfully on feature head `143ce4ac8598ca0f708cf60cb3fc392d53ead05d`: format, lint, typecheck, unit tests, PostgreSQL integration, production build and Chromium E2E all passed.
+- PR #1 remains a draft and has not been merged.
+- Repository ruleset listing returned no rulesets. The branch-protection endpoint returned 403 to the connected integration, so `main` protection could not be independently verified. No protection setting was changed and no merge was attempted.
+- Gate 1 remains partial until Ray reviews/accepts the evidence and `main` protection is verified. Do not begin Gate 2 before that acceptance.
