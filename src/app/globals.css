@@ -448,6 +448,10 @@ textarea:focus-visible {
 .project-card:hover h3 a span {
   transform: translate(3px, -3px);
 }
+.content-list .content-item span.content-status {
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
 .project-strapline {
   margin: 0 0 12px;
   color: var(--ink-soft);
@@ -1189,6 +1193,132 @@ textarea:focus-visible {
 .admin-login {
   max-width: 760px;
   margin-inline: auto;
+}
+
+.admin-nav {
+  display: flex;
+  gap: 1rem;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.admin-nav a {
+  color: inherit;
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.content-workspace {
+  margin-top: 2rem;
+}
+.content-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.content-toolbar select {
+  min-height: 2.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: var(--surface);
+  color: inherit;
+}
+.content-columns {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.7fr) minmax(0, 1.6fr);
+  gap: 1.5rem;
+}
+.content-list,
+.content-editor {
+  padding: 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  background: var(--surface);
+}
+.content-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.content-item {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  text-align: left;
+  padding: 0.8rem;
+  border: 0;
+  border-radius: 0.4rem;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.content-item:hover,
+.content-item.selected {
+  background: var(--surface-raised);
+}
+.content-editor textarea {
+  display: block;
+  width: 100%;
+  margin: 0.5rem 0 1rem;
+  padding: 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: var(--background);
+  color: inherit;
+  font:
+    0.88rem / 1.5 ui-monospace,
+    monospace;
+}
+.content-message {
+  padding: 0.75rem;
+  border-left: 3px solid currentColor;
+}
+.revision-list {
+  margin-top: 1.5rem;
+}
+.revision-list li {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+}
+@media (max-width: 760px) {
+  .content-columns {
+    grid-template-columns: 1fr;
+  }
+}
+.media-upload {
+  display: grid;
+  gap: 0.75rem;
+  max-width: 44rem;
+  margin-bottom: 2rem;
+}
+.media-upload input,
+.media-list input {
+  min-height: 2.5rem;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 0.4rem;
+  background: var(--background);
+  color: inherit;
+}
+.media-list {
+  list-style: none;
+  padding: 0;
+}
+.media-list li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--line);
+}
+.media-list label {
+  display: grid;
+  gap: 0.35rem;
 }
 .admin-panel h1,
 .admin-login h1 {

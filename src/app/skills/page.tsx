@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageIntro } from "@/components/portfolio-ui";
 import { findProject, skills } from "@/content/portfolio";
+import { getPublishedSkills } from "@/lib/content/public";
 
 export const metadata: Metadata = {
   title: "Skills",
@@ -14,7 +15,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function SkillsPage() {
+export const dynamic = "force-dynamic";
+export default async function SkillsPage() {
+  const managed = await getPublishedSkills();
+  const displaySkills = managed.length
+    ? managed.map((skill) => ({
+        name: skill.name,
+        description: skill.summary,
+        evidence: skill.evidence,
+      }))
+    : skills;
   return (
     <main id="main-content" className="page-main">
       <div className="shell">
@@ -26,7 +36,7 @@ export default function SkillsPage() {
       </div>
       <section className="content-section">
         <div className="shell skill-grid">
-          {skills.map((skill) => (
+          {displaySkills.map((skill) => (
             <article className="skill-card" key={skill.name}>
               <h2>{skill.name}</h2>
               <p>{skill.description}</p>

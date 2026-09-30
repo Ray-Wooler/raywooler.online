@@ -1,5 +1,7 @@
 # Backup and restore
 
+Gate 4 media files live in `MEDIA_DIR` (default `./var/media`) and are not stored in PostgreSQL. Include this directory in the same protected backup schedule as the database. The database holds the media inventory, checksum, alt text and publication state; a restore missing media bytes will leave image records whose files cannot be served. Verify file checksums after restore before reopening public media.
+
 ## Scope
 
 PostgreSQL is the system of record. Repository migrations reconstruct schema; authorised encrypted backups reconstruct operational data. Production backup credentials and archives must never be stored in Git or CI artifacts.

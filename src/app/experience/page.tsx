@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PageIntro } from "@/components/portfolio-ui";
 import { experience } from "@/content/portfolio";
+import { getPublishedExperience } from "@/lib/content/public";
 
 export const metadata: Metadata = {
   title: "Experience",
@@ -13,7 +14,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ExperiencePage() {
+export const dynamic = "force-dynamic";
+export default async function ExperiencePage() {
+  const managed = await getPublishedExperience();
+  const displayExperience = managed.length
+    ? managed.map((item) => ({
+        title: item.title,
+        organisation: item.organisation,
+        period: item.periodLabel,
+        description: item.responsibilities.join(" "),
+        capabilities: item.transferableCapabilities,
+      }))
+    : experience;
   return (
     <main id="main-content" className="page-main">
       <div className="shell">
@@ -30,7 +42,7 @@ export default function ExperiencePage() {
             responsibilities will be added only after the public résumé record has been checked.
           </p>
           <div className="experience-list">
-            {experience.map((item) => (
+            {displayExperience.map((item) => (
               <article className="experience-card" key={item.title}>
                 <div>
                   <span className="period">{item.period}</span>

@@ -1,0 +1,11 @@
+ALTER TABLE "experience" ADD CONSTRAINT "experience_publication_status_check" CHECK ("experience"."publication_status" in ('DRAFT', 'REVIEW', 'APPROVED', 'PUBLISHED', 'ARCHIVED'));--> statement-breakpoint
+ALTER TABLE "media_assets" ADD CONSTRAINT "media_publication_status_check" CHECK ("media_assets"."publication_status" in ('DRAFT', 'REVIEW', 'APPROVED', 'PUBLISHED', 'ARCHIVED'));--> statement-breakpoint
+ALTER TABLE "media_assets" ADD CONSTRAINT "media_mime_type_check" CHECK ("media_assets"."mime_type" in ('image/png', 'image/jpeg', 'image/webp'));--> statement-breakpoint
+ALTER TABLE "media_assets" ADD CONSTRAINT "media_size_positive_check" CHECK ("media_assets"."byte_size" > 0 and "media_assets"."byte_size" <= 8388608);--> statement-breakpoint
+ALTER TABLE "pages" ADD CONSTRAINT "pages_publication_status_check" CHECK ("pages"."publication_status" in ('DRAFT', 'REVIEW', 'APPROVED', 'PUBLISHED', 'ARCHIVED'));--> statement-breakpoint
+ALTER TABLE "projects" ADD CONSTRAINT "projects_publication_status_check" CHECK ("projects"."publication_status" in ('DRAFT', 'REVIEW', 'APPROVED', 'PUBLISHED', 'ARCHIVED'));--> statement-breakpoint
+ALTER TABLE "projects" ADD CONSTRAINT "projects_maturity_check" CHECK ("projects"."maturity" in ('Concept', 'Research', 'Prototype', 'Pilot', 'Active Development', 'Operational', 'Production', 'Archived'));--> statement-breakpoint
+ALTER TABLE "projects" ADD CONSTRAINT "projects_visibility_check" CHECK ("projects"."visibility" in ('PUBLIC', 'PRIVATE'));--> statement-breakpoint
+ALTER TABLE "projects" ADD CONSTRAINT "projects_repository_visibility_check" CHECK ("projects"."repository_visibility" in ('PUBLIC', 'PRIVATE', 'UNKNOWN'));--> statement-breakpoint
+ALTER TABLE "services" ADD CONSTRAINT "services_publication_status_check" CHECK ("services"."publication_status" in ('DRAFT', 'REVIEW', 'APPROVED', 'PUBLISHED', 'ARCHIVED'));--> statement-breakpoint
+ALTER TABLE "skills" ADD CONSTRAINT "skills_publication_status_check" CHECK ("skills"."publication_status" in ('DRAFT', 'REVIEW', 'APPROVED', 'PUBLISHED', 'ARCHIVED'));
