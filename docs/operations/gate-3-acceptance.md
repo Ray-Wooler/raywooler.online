@@ -1,6 +1,6 @@
 # Gate 3 — Persistence & Admin Identity Evidence
 
-**Status:** Implemented locally; remote CI pending; not accepted
+**Status:** Automated gates passed; owner acceptance pending
 **Branching:** Based on accepted Gate 2 merge `2cce3aa1a90e70eeae9b1150049343544e9539c6`; planned PR targets `main`. `main` is unprotected, so the PR must remain unmerged until repository governance is restored.
 
 ## Intended scope
@@ -13,11 +13,11 @@
 ## Verification evidence
 
 - `pnpm install --frozen-lockfile`: PASS.
-- `pnpm check`: PASS — format, lint, TypeScript, 10 unit tests passed (1 integration suite skipped without local PostgreSQL), and optimized production build.
-- Migration generation: PASS — Drizzle generated both the identity schema and the single-owner constraint migration from repository schema.
+- `pnpm check`: PASS — format, lint, TypeScript, 10 unit tests passed (the integration file is skipped in this generic local run), and optimized production build.
+- Migration generation: PASS — Drizzle generated the owner identity/session/audit schema and the single-owner constraint migration from repository schema.
 - `git diff --check`: PASS.
-- Local database migration/integration and Playwright E2E: not executed; this workspace has no PostgreSQL/Docker service and no Playwright browser binary. CI is configured to apply migrations, run integration tests, seed a loopback-only disposable owner, and run browser tests for unauthenticated denial, sign-in, session attributes, sign-out-all and login throttling.
 - Local Node is v24.19.0; supported project/CI runtime is Node 22.
+- GitHub Actions run `36651863441` passed on commit `5481128ef50e2579233f1733c7b889adb29aa616`: migration apply; format; lint; typecheck; unit suite (10 passed, 1 skipped); PostgreSQL integration test (1 passed); build; guarded ephemeral owner seed; and all 8 Chromium E2E tests (including unauthenticated denial, successful sign-in, cookie properties, sign-out-all, origin rejection and throttling).
 
 ## Exclusions and remaining release work
 
