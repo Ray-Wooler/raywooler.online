@@ -7,7 +7,7 @@ Public browser → Caddy → Next.js application → PostgreSQL
                                 ├────────────→ persistent media
                                 └────────────→ OpenAI API (optional, server side)
 
-Admin browser → same-origin authenticated server boundary → application data
+Admin browser → same-origin owner session → server-side authorization → PostgreSQL identity/audit data
 ```
 
 ## Gate 1 runtime foundation
@@ -18,7 +18,7 @@ Admin browser → same-origin authenticated server boundary → application data
 - PostgreSQL 16 local development service defined in `docker-compose.yml`.
 - Vitest unit/integration harness, Playwright smoke-test harness, Biome lint/format and GitHub Actions CI.
 
-No public portfolio routes, authentication feature or domain schema are included in Gate 1. Those belong to later accepted gates. The empty schema avoids speculative tables; the migration workflow is configured and will be exercised when Gate 3 introduces its schema.
+Gate 2 public routes render static repository content. Gate 3 introduces only the schema required for a single owner account, opaque sessions, login throttling and audit events. Content-management domains remain deferred to Gate 4.
 
 ## Deployment boundary
 

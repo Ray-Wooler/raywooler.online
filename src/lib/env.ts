@@ -1,14 +1,35 @@
 import { z } from "zod";
 
-const envSchema = z.object({
-  NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
-  APP_URL: z.url().default("http://localhost:3000"),
-  DATABASE_URL: z.preprocess(
-    (value) => (typeof value === "string" && value.trim() === "" ? undefined : value),
-    z.url().optional(),
-  ),
-  LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
-});
+const envSchema = z
+  .object({
+    NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
+    APP_URL: z.url().default("http://localhost:3000"),
+    DATABASE_URL: z.preprocess(
+      (value) => (typeof value === "string" && value.trim() === "" ? undefined : value),
+      z.url().optional(),
+    ),
+    LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
+  })
+  .superRefine((value, context) => {
+    let appUrl: URL;
+    try {
+      appUrl = new URL(value.APP_URL);
+    } catch {
+      return;
+    }
+    const loopbackHosts = new Set(["localhost", "127.0.0.1", "[::1]"]);
+    if (
+      value.NODE_ENV === "production" &&
+      appUrl.protocol !== "https:" &&
+      !loopbackHosts.has(appUrl.hostname)
+    ) {
+      context.addIssue({
+        code: "custom",
+        path: ["APP_URL"],
+        message: "Non-loopback production APP_URL must use HTTPS",
+      });
+    }
+  });
 
 export type AppEnv = z.infer<typeof envSchema>;
 

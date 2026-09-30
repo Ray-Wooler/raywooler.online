@@ -1,6 +1,9 @@
 # Gate 2 — Public Portfolio Core Evidence
 
-**Status:** Automated implementation gates passed; owner review and integration governance pending
+**Status:** Accepted by owner and merged to `main`
+**Pull request:** #2 — merged
+**Merge commit:** `2cce3aa1a90e70eeae9b1150049343544e9539c6`
+**Verification:** GitHub Actions run `36622587079` passed on the final PR head.
 **Scope:** Public portfolio pages and statically rendered content only.
 
 ## Implemented
@@ -20,4 +23,4 @@
 
 ## Acceptance conditions
 
-This report becomes complete only after the owner reviews public descriptions and disclosure markers, and repository integration governance is restored. Production release remains a separate owner-authorized action.
+Owner acceptance is recorded by the PR merge. GitHub still reports `main` as unprotected and no rulesets as configured; this governance gap remains open for subsequent integration. Production release remains a separate owner-authorized action.
