@@ -216,7 +216,7 @@ test("owner creates, reviews, publishes and revises a project without changing s
   });
   await page.goto("/projects");
   const managedProjectLink = page.locator(`a[href="/projects/${slug}"]`);
-  await expect(managedProjectLink).toBeVisible();
-  await managedProjectLink.click();
+  await expect(managedProjectLink.first()).toBeVisible();
+  await managedProjectLink.first().click();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(title);
 });
