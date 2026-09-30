@@ -195,14 +195,15 @@ test("owner creates, reviews, publishes and revises a project without changing s
   await editor.fill(JSON.stringify(record, null, 2));
   await page.getByRole("button", { name: "Save changes" }).click();
   await expect(page.getByText(/Version 2.*Owner edited content/)).toBeVisible();
+  await page.goto("/projects");
+  await expect(page.locator(`a[href="/projects/${slug}"]`)).toHaveCount(0);
+  await page.goto("/admin/content");
   await page.getByRole("button", { name: "Submit for review" }).click();
   await page.getByRole("button", { name: "Approve" }).click();
-  await page.getByRole("button", { name: "Publish" }).click();
+  await page.getByRole("button", { name: "Publish", exact: true }).click();
   await page.goto("/projects");
-  await expect(page.getByRole("link", { name: /Gate 4 verified project/ })).toHaveAttribute(
-    "href",
-    `/projects/${slug}`,
-  );
-  await page.getByRole("link", { name: /Gate 4 verified project/ }).click();
+  const managedProjectLink = page.locator(`a[href="/projects/${slug}"]`);
+  await expect(managedProjectLink).toBeVisible();
+  await managedProjectLink.click();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Gate 4 verified project");
 });
