@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PageIntro, ProjectCard } from "@/components/portfolio-ui";
 import { projects } from "@/content/portfolio";
+import { getPublishedProjects } from "@/lib/content/public";
 
 export const metadata: Metadata = {
   title: "Projects",
@@ -13,7 +14,25 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ProjectsPage() {
+export const dynamic = "force-dynamic";
+export default async function ProjectsPage() {
+  const managedProjects = await getPublishedProjects().catch(() => []);
+  const displayProjects = managedProjects.length
+    ? managedProjects.map((project) => ({
+        slug: project.slug,
+        title: project.title,
+        strapline: project.role || project.summary,
+        summary: project.summary,
+        problem: project.problem,
+        approach: project.responsibilities,
+        role: project.role,
+        status: project.maturity as (typeof projects)[number]["status"],
+        capabilities: project.capabilities,
+        technologies: project.technologies,
+        featured: project.featured,
+        publicDisclosure: "owner-review-required" as const,
+      }))
+    : projects;
   return (
     <main id="main-content" className="page-main">
       <div className="shell">
@@ -31,7 +50,7 @@ export default function ProjectsPage() {
             subject to owner review before a production release.
           </p>
           <div className="project-grid">
-            {projects.map((project) => (
+            {displayProjects.map((project) => (
               <ProjectCard key={project.slug} project={project} />
             ))}
           </div>

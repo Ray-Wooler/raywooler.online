@@ -24,7 +24,8 @@ export default async function AdminHomePage() {
       </p>
       <h1>Portfolio administration</h1>
       <p>
-        Signed in as <strong>{owner.email}</strong>. Content administration is introduced in Gate 4.
+        Signed in as <strong>{owner.email}</strong>. Manage portfolio content, review changes, and
+        publish approved records.
       </p>
       <div className="admin-actions">
         <form action="/api/auth/logout" method="post">

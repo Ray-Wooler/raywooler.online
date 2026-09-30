@@ -9,6 +9,7 @@ const envSchema = z
       z.url().optional(),
     ),
     LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
+    MEDIA_DIR: z.string().min(1).default("./var/media"),
   })
   .superRefine((value, context) => {
     let appUrl: URL;

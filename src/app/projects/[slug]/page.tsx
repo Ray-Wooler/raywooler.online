@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BulletList } from "@/components/portfolio-ui";
 import { findProject, projects } from "@/content/portfolio";
+import { getPublishedProject } from "@/lib/content/public";
 
 type ProjectPageProps = { params: Promise<{ slug: string }> };
 
@@ -12,7 +13,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const project = findProject(slug);
+  const project = (await getPublishedProject(slug).catch(() => null)) ?? findProject(slug);
   if (!project) return { title: "Project not found" };
   return {
     title: project.title,
@@ -24,7 +25,15 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { slug } = await params;
-  const project = findProject(slug);
+  const managedProject = await getPublishedProject(slug).catch(() => null);
+  const project = managedProject
+    ? {
+        ...managedProject,
+        strapline: managedProject.role || managedProject.summary,
+        status: managedProject.maturity,
+        approach: managedProject.responsibilities,
+      }
+    : findProject(slug);
   if (!project) notFound();
 
   return (

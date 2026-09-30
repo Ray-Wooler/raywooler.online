@@ -154,3 +154,55 @@ test("owner sign-in responses are generic and account attempts are throttled", a
   expect(blocked.status()).toBe(303);
   expect(blocked.headers().location).toContain("/admin/login?error=1");
 });
+
+test("owner creates, reviews, publishes and revises a project without changing source", async ({
+  page,
+}) => {
+  const email = process.env.E2E_ADMIN_EMAIL;
+  const password = process.env.E2E_ADMIN_PASSWORD;
+  if (!email || !password) {
+    test.skip(true, "CI provisions a disposable owner account for the browser test.");
+    return;
+  }
+  const slug = `gate4-${crypto.randomUUID().slice(0, 8)}`;
+  await page.goto("/admin/login");
+  await page.getByLabel("Email").fill(email);
+  await page.getByLabel("Password").fill(password);
+  await page.getByRole("button", { name: "Sign in" }).click();
+  await page
+    .getByRole("navigation", { name: "Administration" })
+    .getByRole("link", { name: "Content" })
+    .click();
+  await page.getByLabel("Record fields").fill(
+    JSON.stringify(
+      {
+        title: "Gate 4 verified project",
+        slug,
+        summary: "A project created and published through the owner console.",
+        problem: "A test should prove the content lifecycle.",
+        maturity: "Prototype",
+        responsibilities: ["Created through the browser console"],
+      },
+      null,
+      2,
+    ),
+  );
+  await page.getByRole("button", { name: "Create draft" }).click();
+  await expect(page.getByText("DRAFT", { exact: true }).last()).toBeVisible();
+  const editor = page.getByLabel("Record fields");
+  const record = JSON.parse(await editor.inputValue()) as Record<string, unknown>;
+  record.summary = "Edited once through the owner console.";
+  await editor.fill(JSON.stringify(record, null, 2));
+  await page.getByRole("button", { name: "Save changes" }).click();
+  await expect(page.getByText(/Version 2.*Owner edited content/)).toBeVisible();
+  await page.getByRole("button", { name: "Submit for review" }).click();
+  await page.getByRole("button", { name: "Approve" }).click();
+  await page.getByRole("button", { name: "Publish" }).click();
+  await page.goto("/projects");
+  await expect(page.getByRole("link", { name: /Gate 4 verified project/ })).toHaveAttribute(
+    "href",
+    `/projects/${slug}`,
+  );
+  await page.getByRole("link", { name: /Gate 4 verified project/ }).click();
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Gate 4 verified project");
+});

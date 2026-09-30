@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageIntro } from "@/components/portfolio-ui";
 import { findProject, services } from "@/content/portfolio";
+import { getPublishedServices } from "@/lib/content/public";
 
 export const metadata: Metadata = {
   title: "Services",
@@ -14,7 +15,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ServicesPage() {
+export const dynamic = "force-dynamic";
+export default async function ServicesPage() {
+  const managed = await getPublishedServices().catch(() => []);
+  const displayServices = managed.length
+    ? managed.map((service) => ({
+        ...service,
+        engagement: service.typicalEngagement,
+        relatedProjects: [] as string[],
+      }))
+    : services;
   return (
     <main id="main-content" className="page-main">
       <div className="shell">
@@ -26,7 +36,7 @@ export default function ServicesPage() {
       </div>
       <section className="content-section">
         <div className="shell page-grid">
-          {services.map((service) => (
+          {displayServices.map((service) => (
             <article className="service-card" key={service.slug}>
               <p className="eyebrow">
                 <span className="eyebrow-line" />
