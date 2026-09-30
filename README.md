@@ -4,7 +4,7 @@ V1 is the professional portfolio and AI-powered services platform defined in [`d
 
 ## Gate status
 
-The current branch is establishing Gate 1 (repository foundation). It contains no portfolio feature implementation. See [`docs/operations/gate-1-acceptance.md`](docs/operations/gate-1-acceptance.md) for evidence and blockers.
+Gate 1 is accepted and merged to `main`. The current development branch implements Gate 2, the public portfolio core. It adds no authentication, database-backed content, enquiry submission or AI service; those remain later gates. See [`docs/operations/gate-1-acceptance.md`](docs/operations/gate-1-acceptance.md) and [`docs/operations/gate-2-acceptance.md`](docs/operations/gate-2-acceptance.md).
 
 ## Local foundation setup
 
@@ -39,7 +39,7 @@ Drizzle configuration and schema entry point are established. No application tab
 
 ## Repository authority and release
 
-The canonical remote is `git@github.com:Ray-Wooler/raywooler.online.git`. `main` is the protected integration branch; implementation work uses bounded branches and verified pull requests. GitHub is authoritative. Production deployment and DNS changes require Ray’s explicit release authorization.
+The canonical remote is `git@github.com:Ray-Wooler/raywooler.online.git`. `main` is intended to be the protected integration branch; GitHub currently reports it as unprotected, so do not merge further feature work until that governance gap is corrected. Implementation work uses bounded branches and verified pull requests. Production deployment and DNS changes require Ray’s explicit release authorization.
 
 ## Documentation
 
