@@ -203,6 +203,17 @@ test("owner creates, reviews, publishes and revises a project without changing s
   await page.getByRole("button", { name: "Submit for review" }).click();
   await page.getByRole("button", { name: "Approve" }).click();
   await page.getByRole("button", { name: "Publish", exact: true }).click();
+  const recordsResponse = await page.request.get("/api/admin/content/projects");
+  expect(recordsResponse.ok()).toBe(true);
+  const records = (await recordsResponse.json()).items as Array<{
+    slug: string;
+    publicationStatus: string;
+    visibility: string;
+  }>;
+  expect(records.find((record) => record.slug === slug)).toMatchObject({
+    publicationStatus: "PUBLISHED",
+    visibility: "PUBLIC",
+  });
   await page.goto("/projects");
   const managedProjectLink = page.locator(`a[href="/projects/${slug}"]`);
   await expect(managedProjectLink).toBeVisible();

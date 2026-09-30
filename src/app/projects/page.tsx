@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 export default async function ProjectsPage() {
-  const managedProjects = await getPublishedProjects().catch(() => []);
+  const managedProjects = await getPublishedProjects();
   const displayProjects = managedProjects.length
     ? managedProjects.map((project) => ({
         slug: project.slug,

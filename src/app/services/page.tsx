@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 export default async function ServicesPage() {
-  const managed = await getPublishedServices().catch(() => []);
+  const managed = await getPublishedServices();
   const displayServices = managed.length
     ? managed.map((service) => ({
         ...service,

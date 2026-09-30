@@ -6,7 +6,7 @@ type Props = { params: Promise<{ slug: string }> };
 export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const page = await getPublishedPage(slug).catch(() => null);
+  const page = await getPublishedPage(slug);
   return page
     ? {
         title: page.seoTitle ?? page.title,
@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 export default async function ManagedPage({ params }: Props) {
   const { slug } = await params;
-  const page = await getPublishedPage(slug).catch(() => null);
+  const page = await getPublishedPage(slug);
   if (!page) notFound();
   return (
     <main id="main-content" className="page-main">

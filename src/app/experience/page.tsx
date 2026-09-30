@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 export default async function ExperiencePage() {
-  const managed = await getPublishedExperience().catch(() => []);
+  const managed = await getPublishedExperience();
   const displayExperience = managed.length
     ? managed.map((item) => ({
         title: item.title,

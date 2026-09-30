@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 export default async function SkillsPage() {
-  const managed = await getPublishedSkills().catch(() => []);
+  const managed = await getPublishedSkills();
   const displaySkills = managed.length
     ? managed.map((skill) => ({
         name: skill.name,

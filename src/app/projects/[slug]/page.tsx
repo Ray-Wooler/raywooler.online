@@ -13,7 +13,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const project = (await getPublishedProject(slug).catch(() => null)) ?? findProject(slug);
+  const project = (await getPublishedProject(slug)) ?? findProject(slug);
   if (!project) return { title: "Project not found" };
   return {
     title: project.title,
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { slug } = await params;
-  const managedProject = await getPublishedProject(slug).catch(() => null);
+  const managedProject = await getPublishedProject(slug);
   const project = managedProject
     ? {
         ...managedProject,
