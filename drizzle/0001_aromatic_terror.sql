@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "users_single_owner_unique" ON "users" USING btree ("role");

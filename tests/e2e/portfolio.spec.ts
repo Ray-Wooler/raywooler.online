@@ -88,3 +88,69 @@ test("mobile navigation is keyboard-operable without a client menu bundle", asyn
   await menu.getByRole("link", { name: "Projects" }).click();
   await expect(page).toHaveURL("/projects");
 });
+
+test("admin routes reject anonymous visitors and sign-in enforces origin checks", async ({
+  page,
+  request,
+}) => {
+  await page.goto("/admin");
+  await expect(page).toHaveURL(/\/admin\/login$/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Sign in to administration.");
+
+  const rejected = await request.post("/api/auth/login", {
+    form: { email: "gate3-owner@example.invalid", password: "disposable-ci-test-password-only" },
+    maxRedirects: 0,
+  });
+  expect(rejected.status()).toBe(403);
+});
+
+test("owner sign-in creates a protected session and logout-all revokes access", async ({
+  page,
+}) => {
+  const email = process.env.E2E_ADMIN_EMAIL;
+  const password = process.env.E2E_ADMIN_PASSWORD;
+  if (!email || !password) {
+    test.skip(true, "CI provisions a disposable owner account for the browser test.");
+    return;
+  }
+
+  await page.goto("/admin/login");
+  await page.getByLabel("Email").fill(email);
+  await page.getByLabel("Password").fill(password);
+  await page.getByRole("button", { name: "Sign in" }).click();
+  await expect(page).toHaveURL("/admin");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Portfolio administration");
+  await expect(page.getByText(email, { exact: false })).toBeVisible();
+
+  const cookie = (await page.context().cookies()).find((item) => item.name === "rw_session");
+  expect(cookie?.httpOnly).toBe(true);
+  expect(cookie?.sameSite).toBe("Lax");
+  expect(cookie?.secure).toBe(false);
+
+  await page.getByRole("button", { name: "Sign out all sessions" }).click();
+  await expect(page).toHaveURL(/\/admin\/login\?revoked=1$/);
+  await page.goto("/admin");
+  await expect(page).toHaveURL(/\/admin\/login$/);
+});
+
+test("owner sign-in responses are generic and account attempts are throttled", async ({
+  request,
+}) => {
+  const email = `unknown-${crypto.randomUUID()}@example.invalid`;
+  for (let attempt = 1; attempt <= 5; attempt += 1) {
+    const response = await request.post("/api/auth/login", {
+      form: { email, password: "deliberately-wrong-password-2026" },
+      headers: { Origin: "http://127.0.0.1:3000" },
+      maxRedirects: 0,
+    });
+    expect(response.status()).toBe(303);
+    expect(response.headers().location).toContain("/admin/login?error=1");
+  }
+  const blocked = await request.post("/api/auth/login", {
+    form: { email, password: "deliberately-wrong-password-2026" },
+    headers: { Origin: "http://127.0.0.1:3000" },
+    maxRedirects: 0,
+  });
+  expect(blocked.status()).toBe(303);
+  expect(blocked.headers().location).toContain("/admin/login?error=1");
+});

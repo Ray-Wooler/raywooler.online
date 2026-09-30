@@ -4,7 +4,7 @@ V1 is the professional portfolio and AI-powered services platform defined in [`d
 
 ## Gate status
 
-Gate 1 is accepted and merged to `main`. The current development branch implements Gate 2, the public portfolio core. It adds no authentication, database-backed content, enquiry submission or AI service; those remain later gates. See [`docs/operations/gate-1-acceptance.md`](docs/operations/gate-1-acceptance.md) and [`docs/operations/gate-2-acceptance.md`](docs/operations/gate-2-acceptance.md).
+Gate 1 and Gate 2 are accepted and merged to `main`. Gate 3 persistence and owner identity are being implemented on `feat/gate-3-persistence-admin`. Content editing, enquiry submission and AI services remain later gates. See [`docs/operations/gate-1-acceptance.md`](docs/operations/gate-1-acceptance.md), [`docs/operations/gate-2-acceptance.md`](docs/operations/gate-2-acceptance.md), and [`docs/operations/gate-3-acceptance.md`](docs/operations/gate-3-acceptance.md).
 
 ## Local foundation setup
 
@@ -14,10 +14,12 @@ Requirements: Node.js 22 LTS, pnpm 11.25+, and Docker Compose v2.
 pnpm install --frozen-lockfile
 cp .env.example .env
 docker compose up -d db
+pnpm db:migrate
+pnpm admin:create
 pnpm dev
 ```
 
-The Postgres development container uses trust authentication and is bound to loopback only. It is for a local workstation and must never be exposed or reused in staging or production. `DATABASE_URL` can be omitted for framework-only work; database operations fail with a clear configuration error when it is missing. Do not commit `.env`.
+The Postgres development container uses trust authentication and is bound to loopback only. It is for a local workstation and must never be exposed or reused in staging or production. Set `DATABASE_URL` in `.env` before migrations or owner provisioning. The first owner command requires a terminal and does not echo password input. Do not commit `.env`.
 
 ## Quality checks
 
@@ -31,11 +33,11 @@ pnpm build
 pnpm test:e2e
 ```
 
-Integration tests require `TEST_DATABASE_URL`. End-to-end tests require a successful production build and a Chromium browser (`pnpm exec playwright install chromium`). CI runs all checks against Node 22 and PostgreSQL 16.
+CI applies tracked migrations to ephemeral PostgreSQL 16 before tests. Integration tests require `TEST_DATABASE_URL`. End-to-end tests require a successful production build and Chromium (`pnpm exec playwright install chromium`); CI seeds a disposable owner in its loopback-only database for sign-in and session tests.
 
 ## Database workflow
 
-Drizzle configuration and schema entry point are established. No application tables or migration are created at Gate 1: the accepted architecture says not to create speculative tables. Domain schema and its first migration belong to the persistence gate. Generate migrations from tracked schema changes with `pnpm db:generate`, review the SQL, then apply with `pnpm db:migrate`.
+Drizzle manages the owner identity, session, login-throttle and audit schema added in Gate 3. Generate migrations from tracked schema changes with `pnpm db:generate`, review the SQL, then apply with `pnpm db:migrate`. Never modify production schema manually. Owner account provisioning and recovery are host-mediated; see `DATA-MODEL.md` and `SECURITY.md`.
 
 ## Repository authority and release
 
@@ -46,5 +48,6 @@ The canonical remote is `git@github.com:Ray-Wooler/raywooler.online.git`. `main`
 - [`ARCHITECTURE.md`](ARCHITECTURE.md) and [`docs/architecture/`](docs/architecture/)
 - [`SECURITY.md`](SECURITY.md)
 - [`DATA-MODEL.md`](DATA-MODEL.md)
+- [`BACKUP-RESTORE.md`](BACKUP-RESTORE.md) and [`INCIDENT-RESPONSE.md`](INCIDENT-RESPONSE.md)
 - [`AI-BOUNDARY.md`](AI-BOUNDARY.md)
 - [`AGENTS.md`](AGENTS.md)

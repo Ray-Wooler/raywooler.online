@@ -16,7 +16,10 @@
     "test:e2e": "playwright test",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build"
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "admin:create": "node --import tsx scripts/admin-account.ts create",
+    "admin:reset-password": "node --import tsx scripts/admin-account.ts reset-password",
+    "e2e:seed-test-owner": "node --import tsx scripts/seed-test-owner.ts"
   },
   "dependencies": {
     "drizzle-orm": "^0.45.3",
@@ -37,7 +40,8 @@
     "drizzle-kit": "^0.31.11",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^5.0.2"
+    "vitest": "^5.0.2",
+    "tsx": "4.23.15"
   },
   "engines": {
     "node": ">=22 <23"
