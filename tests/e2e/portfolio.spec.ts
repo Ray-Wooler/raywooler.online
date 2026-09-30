@@ -165,6 +165,7 @@ test("owner creates, reviews, publishes and revises a project without changing s
     return;
   }
   const slug = `gate4-${crypto.randomUUID().slice(0, 8)}`;
+  const title = `Gate 4 verified ${slug}`;
   await page.goto("/admin/login");
   await page.getByLabel("Email").fill(email);
   await page.getByLabel("Password").fill(password);
@@ -176,7 +177,7 @@ test("owner creates, reviews, publishes and revises a project without changing s
   await page.getByLabel("Record fields").fill(
     JSON.stringify(
       {
-        title: "Gate 4 verified project",
+        title,
         slug,
         summary: "A project created and published through the owner console.",
         problem: "A test should prove the content lifecycle.",
@@ -198,6 +199,7 @@ test("owner creates, reviews, publishes and revises a project without changing s
   await page.goto("/projects");
   await expect(page.locator(`a[href="/projects/${slug}"]`)).toHaveCount(0);
   await page.goto("/admin/content");
+  await page.getByRole("button", { name: `${title} DRAFT` }).click();
   await page.getByRole("button", { name: "Submit for review" }).click();
   await page.getByRole("button", { name: "Approve" }).click();
   await page.getByRole("button", { name: "Publish", exact: true }).click();
@@ -205,5 +207,5 @@ test("owner creates, reviews, publishes and revises a project without changing s
   const managedProjectLink = page.locator(`a[href="/projects/${slug}"]`);
   await expect(managedProjectLink).toBeVisible();
   await managedProjectLink.click();
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Gate 4 verified project");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(title);
 });
